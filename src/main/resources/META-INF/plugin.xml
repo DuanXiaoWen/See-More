@@ -1,18 +1,65 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.duanxiaowen.seemore</id>
-    <name>see-more</name>
+    <name>See More</name>
     <vendor>duanxiaowen</vendor>
 
-    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.duanxiaowen.seemore.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.duanxiaowen.seemore.services.MyProjectService"/>
+        <toolWindow factoryClass="com.github.duanxiaowen.seemore.SeeMoreToolWindowFactory" id="See More"
+                    secondary="true" anchor="right" icon="AllIcons.Debugger.Watch">
+
+        </toolWindow>
+<!--        <applicationService serviceImplementation="com.github.duanxiaowen.seemore.services.MyApplicationService"/>-->
+        <projectService
+                serviceImplementation="com.github.duanxiaowen.seemore.services.SeeMoreToolWindowProjectService"/>
     </extensions>
 
-    <applicationListeners>
-        <listener class="com.github.duanxiaowen.seemore.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </applicationListeners>
+
+
+    <actions>
+
+        <group id="SeeMoreActionGroup"
+               text="See More"
+               description="Actions of the See More plugin"
+               icon="AllIcons.Debugger.Watch"
+               popup="false">
+
+            <action id="SeeMore.ViewUpstreamDownstreamCallGraphFromSource"
+                    class="com.github.duanxiaowen.seemore.actions.ViewUpstreamDownstreamAction"
+                    text="View Upstream/Downstream Call Graph"
+                    description="View the upstream/downstream call graph of this function"
+                    icon="AllIcons.Debugger.Watch">
+            </action>
+            <action id="SeeMore.ViewUpstreamCallGraphFromSource"
+                    class="com.github.duanxiaowen.seemore.actions.ViewUpstreamAction"
+                    text="View Upstream Call Graph"
+                    description="View the upstream call graph of this function"
+                    icon="AllIcons.Debugger.Watch">
+            </action>
+            <action id="SeeMore.ViewDownstreamCallGraphFromSource"
+                    class="com.github.duanxiaowen.seemore.actions.ViewDownstreamAction"
+                    text="View Downstream Call Graph"
+                    description="View the downstream call graph of this function"
+                    icon="AllIcons.Debugger.Watch">
+            </action>
+            <!-- The <add-to-group> node specifies that the action should be added to an existing group.
+                 An action can be added to several groups.
+                 - "group-id" (required) specifies the ID of the group to which the action is added. The group must be
+                   implemented by an instance of the DefaultActionGroup class.
+                 - "anchor" (required) specifies the position of the action in the group relative to other actions.
+                   It can have the values "first", "last", "before" and "after".
+                 - "relative-to-action" (required if the anchor is set to "before" and "after") specifies the action
+                   before or after which the current action is inserted. -->
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <!-- The <separator> element defines a separator between actions. -->
+            <!-- <separator/> -->
+            <!-- <group id="AnotherNestedGroup"/> -->
+            <!-- The <reference> element allows to add an existing action to the group.
+                 - "ref" (required) specifies the ID of the action to add. -->
+            <!-- <reference ref="EditorCopy"/> -->
+        </group>
+    </actions>
 </idea-plugin>
